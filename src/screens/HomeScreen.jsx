@@ -21,7 +21,7 @@ const HomeScreen = () => {
         <Pressable
           style={[
             styles.button,
-            view === 0 ? {backgroundColor: 'green'} : null,
+            view === 0 ? {backgroundColor: '#72C37AFF'} : null,
           ]}
           onPress={() => setView(0)}>
           <Text style={[styles.btnText, view === 0 ? {color: 'white'} : null]}>
@@ -31,7 +31,7 @@ const HomeScreen = () => {
         <Pressable
           style={[
             styles.button,
-            view === 1 ? {backgroundColor: 'green'} : null,
+            view === 1 ? {backgroundColor: '#72C37AFF'} : null,
           ]}
           onPress={() => setView(1)}>
           <Text style={[styles.btnText, view === 1 ? {color: 'white'} : null]}>
@@ -41,7 +41,7 @@ const HomeScreen = () => {
         <Pressable
           style={[
             styles.button,
-            view === 2 ? {backgroundColor: 'green'} : null,
+            view === 2 ? {backgroundColor: '#72C37AFF'} : null,
           ]}
           onPress={() => setView(2)}>
           <Text style={[styles.btnText, view === 2 ? {color: 'white'} : null]}>
@@ -50,7 +50,7 @@ const HomeScreen = () => {
         </Pressable>
       </View>
       {view === 0 && <AllItems data={data} />}
-      {view === 1 && <AllItems />}
+      {view === 1 && <AllItems data={data.filter((item)=> item.stock < 20)} />}
       {view === 2 && <AddItems />}
     </View>
   );
@@ -80,10 +80,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderWidth: 0.8,
     borderRadius: 50,
-    borderColor: 'green',
+    borderColor: '#72C37AFF',
   },
   btnText: {
-    color: 'green',
+    color: '#72C37AFF',
     fontWeight: '400',
     fontSize: 12,
   },
