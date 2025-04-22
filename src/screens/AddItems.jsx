@@ -12,7 +12,8 @@ import {
 const AddItems = ({data, setData}) => {
   const [itemName, setItemName] = useState('');
   const [stockAmt, setStockAmt] = useState('');
-
+  const [isEdit, setIsEdit] = useState(false);
+  const [editItemId, setEditItemId] = useState(null);
 
   const handleAddItem = () => {
     if(!itemName) return
@@ -29,13 +30,17 @@ const AddItems = ({data, setData}) => {
   };
 
   const handleUpdateItem = () => {
-
+    setData(data.map((item) => item.id === editItemId ? {...item, name: itemName, stock: stockAmt} : item))
   }
 
   const handleDeleteItem = (id) => {
     setData(data.filter((item) => item.id !== id))
   }
-
+  const handleEditItem = (item) => {
+    setIsEdit(true)
+    setItemName(item.name);
+    setEditItemId(item.id);
+  }
   return (
     <View style={styles.container}>
       <TextInput
@@ -54,8 +59,8 @@ const AddItems = ({data, setData}) => {
       />
       <Pressable
         style={({pressed}) => [styles.addBtn, pressed && styles.pressed]}
-        onPress={() => handleAddItem()}>
-        <Text style={styles.addBtnText}> Add Item in Stock </Text>
+        onPress={() => isEdit ? handleUpdateItem() : handleAddItem()}>
+        <Text style={styles.addBtnText}>{isEdit ? "Edit Item in Stock" : "Add Item in Stock" }</Text>
       </Pressable>
 
       <View style={{marginTop: 10}}>
@@ -76,7 +81,7 @@ const AddItems = ({data, setData}) => {
 
               <View style={{flexDirection: 'row', gap: 20}}>
               <Text style={styles.itemText}>{item.stock}</Text>
-                <Pressable >
+                <Pressable onPress={() => handleEditItem(item)}>
                 <Text style={styles.itemText}>Edit</Text>
                 </Pressable>
                 <Pressable onPress={() => handleDeleteItem(item.id)}>
