@@ -16,31 +16,81 @@ const AddItems = ({data, setData}) => {
   const [editItemId, setEditItemId] = useState(null);
 
   const handleAddItem = () => {
-    if(!itemName) return
-    if(!stockAmt) return
+    if (!itemName.trim()) {
+      alert("Item name is required.");
+      return;
+    }
+  
+    if (!/^[A-Za-z\s]+$/.test(itemName)) {
+      alert("Item name must only contain letters.");
+      return;
+    }
+  
+    if (!stockAmt.trim()) {
+      alert("Stock amount is required.");
+      return;
+    }
+  
+    if (isNaN(stockAmt)) {
+      alert("Stock amount must be a number.");
+      return;
+    }
+  
     const newItem = {
       id: Date.now(),
-      name: itemName,
-      stock: stockAmt,
+      name: itemName.trim(),
+      stock: Number(stockAmt),
     };
+  
     setData([...data, newItem]);
     setItemName('');
     setStockAmt('');
-    setIsEdit(false)
+    setIsEdit(false);
   };
+  
 
   const handleUpdateItem = () => {
-    setData(data.map((item) => item.id === editItemId ? {...item, name: itemName, stock: stockAmt} : item))
-  }
+    if (!itemName.trim()) {
+      alert("Item name is required.");
+      return;
+    }
+  
+    if (!/^[A-Za-z\s]+$/.test(itemName)) {
+      alert("Item name must only contain letters.");
+      return;
+    }
+  
+    if (!stockAmt.trim()) {
+      alert("Stock amount is required.");
+      return;
+    }
+  
+    if (isNaN(stockAmt)) {
+      alert("Stock amount must be a number.");
+      return;
+    }
+  
+    setData(
+      data.map(item =>
+        item.id === editItemId
+          ? { ...item, name: itemName.trim(), stock: Number(stockAmt) }
+          : item
+      )
+    );
+    setItemName('');
+    setStockAmt('');
+    setIsEdit(false);
+  };
+  
 
-  const handleDeleteItem = (id) => {
-    setData(data.filter((item) => item.id !== id))
-  }
-  const handleEditItem = (item) => {
-    setIsEdit(true)
+  const handleDeleteItem = id => {
+    setData(data.filter(item => item.id !== id));
+  };
+  const handleEditItem = item => {
+    setIsEdit(true);
     setItemName(item.name);
     setEditItemId(item.id);
-  }
+  };
   return (
     <View style={styles.container}>
       <TextInput
@@ -59,8 +109,10 @@ const AddItems = ({data, setData}) => {
       />
       <Pressable
         style={({pressed}) => [styles.addBtn, pressed && styles.pressed]}
-        onPress={() => isEdit ? handleUpdateItem() : handleAddItem()}>
-        <Text style={styles.addBtnText}>{isEdit ? "Edit Item in Stock" : "Add Item in Stock" }</Text>
+        onPress={() => (isEdit ? handleUpdateItem() : handleAddItem())}>
+        <Text style={styles.addBtnText}>
+          {isEdit ? 'Edit Item in Stock' : 'Add Item in Stock'}
+        </Text>
       </Pressable>
 
       <View style={{marginTop: 10}}>
@@ -80,12 +132,12 @@ const AddItems = ({data, setData}) => {
               <Text style={styles.itemText}>{item.name}</Text>
 
               <View style={{flexDirection: 'row', gap: 20}}>
-              <Text style={styles.itemText}>{item.stock}</Text>
+                <Text style={styles.itemText}>{item.stock}</Text>
                 <Pressable onPress={() => handleEditItem(item)}>
-                <Text style={styles.itemText}>Edit</Text>
+                  <Text style={styles.itemText}>Edit</Text>
                 </Pressable>
                 <Pressable onPress={() => handleDeleteItem(item.id)}>
-                <Text style={styles.itemText}>Delete</Text>
+                  <Text style={styles.itemText}>Delete</Text>
                 </Pressable>
               </View>
             </View>
