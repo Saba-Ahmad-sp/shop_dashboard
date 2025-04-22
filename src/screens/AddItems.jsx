@@ -25,8 +25,16 @@ const AddItems = ({data, setData}) => {
     setData([...data, newItem]);
     setItemName('');
     setStockAmt('');
+    setIsEdit(false)
   };
 
+  const handleUpdateItem = () => {
+
+  }
+
+  const handleDeleteItem = (id) => {
+    setData(data.filter((item) => item.id !== id))
+  }
 
   return (
     <View style={styles.container}>
@@ -46,8 +54,8 @@ const AddItems = ({data, setData}) => {
       />
       <Pressable
         style={({pressed}) => [styles.addBtn, pressed && styles.pressed]}
-        onPress={handleAddItem}>
-        <Text style={styles.addBtnText}>Add</Text>
+        onPress={() => handleAddItem()}>
+        <Text style={styles.addBtnText}> Add Item in Stock </Text>
       </Pressable>
 
       <View style={{marginTop: 10}}>
@@ -71,7 +79,7 @@ const AddItems = ({data, setData}) => {
                 <Pressable >
                 <Text style={styles.itemText}>Edit</Text>
                 </Pressable>
-                <Pressable >
+                <Pressable onPress={() => handleDeleteItem(item.id)}>
                 <Text style={styles.itemText}>Delete</Text>
                 </Pressable>
               </View>
