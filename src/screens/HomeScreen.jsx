@@ -13,6 +13,7 @@ const data = [
 
 const HomeScreen = () => {
   const [view, setView] = useState(0);
+  
 
   return (
     <View style={styles.container}>
@@ -51,7 +52,7 @@ const HomeScreen = () => {
       </View>
       {view === 0 && <AllItems data={data} />}
       {view === 1 && <AllItems data={data.filter((item)=> item.stock < 20)} />}
-      {view === 2 && <AddItems />}
+      {view === 2 && <AddItems data={data} />}
     </View>
   );
 };
