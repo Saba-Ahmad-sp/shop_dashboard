@@ -13,6 +13,7 @@ const AddItems = ({data, setData}) => {
   const [itemName, setItemName] = useState('');
   const [stockAmt, setStockAmt] = useState('');
 
+
   const handleAddItem = () => {
     if(!itemName) return
     if(!stockAmt) return
@@ -25,6 +26,7 @@ const AddItems = ({data, setData}) => {
     setItemName('');
     setStockAmt('');
   };
+
 
   return (
     <View style={styles.container}>
@@ -48,6 +50,36 @@ const AddItems = ({data, setData}) => {
         <Text style={styles.addBtnText}>Add</Text>
       </Pressable>
 
+      <View style={{marginTop: 10}}>
+        <View style={styles.headingConatiner}>
+          <Text style={styles.headingText}>All Items in the Stock</Text>
+        </View>
+
+        <FlatList
+          data={data}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => (
+            <View
+              style={[
+                styles.itemContainer,
+                {backgroundColor: item.stock < 20 ? '#FFCCCC' : '#D7F6BFFF'},
+              ]}>
+              <Text style={styles.itemText}>{item.name}</Text>
+
+              <View style={{flexDirection: 'row', gap: 20}}>
+              <Text style={styles.itemText}>{item.stock}</Text>
+                <Pressable >
+                <Text style={styles.itemText}>Edit</Text>
+                </Pressable>
+                <Pressable >
+                <Text style={styles.itemText}>Delete</Text>
+                </Pressable>
+              </View>
+            </View>
+          )}
+          contentContainerStyle={{gap: 5}}
+        />
+      </View>
     </View>
   );
 };
@@ -80,5 +112,25 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 15,
   },
-  
+  headingConatiner: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 6,
+    paddingVertical: 10,
+  },
+  headingText: {
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 7,
+  },
+  itemText: {
+    fontWeight: '500',
+    fontSize: 14,
+  },
 });
