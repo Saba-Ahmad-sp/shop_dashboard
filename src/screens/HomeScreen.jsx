@@ -1,18 +1,49 @@
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import AllItems from './AllItems';
 import AddItems from './AddItems';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
   const [view, setView] = useState(0);
-  const [data, setData] = useState([
-    {id: 1, name: 'Wheat', stock: 5, unit: 'kg'},
-    {id: 2, name: 'Rice', stock: 15, unit: 'kg'},
-    {id: 3, name: 'Corn', stock: 25, unit: 'kg'},
-    {id: 4, name: 'Basmati Rice', stock: 50, unit: 'kg'},
-    {id: 5, name: 'Pulse', stock: 19, unit: 'kg'},
-  ])
+  const [data, setData] = useState([]);
+
+  //load saved data
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('@stock_data');
+        if (jsonValue != null) {
+          setData(JSON.parse(jsonValue));
+        } else {
+          setData([
+            {id: 1, name: 'Wheat', stock: 5, unit: 'kg'},
+            {id: 2, name: 'Rice', stock: 15, unit: 'kg'},
+            {id: 3, name: 'Corn', stock: 25, unit: 'kg'},
+            {id: 4, name: 'Basmati Rice', stock: 50, unit: 'kg'},
+            {id: 5, name: 'Pulse', stock: 19, unit: 'kg'},
+          ]);
+        }
+      } catch (e) {
+        console.error('Failed to load data', e);
+      }
+    };
+    loadData();
+  }, []);
+  
+  // save data
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        await AsyncStorage.setItem('@stock_data', JSON.stringify(data));
+      } catch (e) {
+        console.error('Failed to sava data', e);
+      }
+    };
+    if (data.length) {
+      saveData();
+    }
+  }, [data]);
 
   return (
     <View style={styles.container}>
@@ -50,7 +81,7 @@ const HomeScreen = () => {
         </Pressable>
       </View>
       {view === 0 && <AllItems data={data} />}
-      {view === 1 && <AllItems data={data.filter((item)=> item.stock < 20)} />}
+      {view === 1 && <AllItems data={data.filter(item => item.stock < 20)} />}
       {view === 2 && <AddItems data={data} setData={setData} />}
     </View>
   );
