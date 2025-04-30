@@ -7,6 +7,8 @@ import {
   Text,
   TextInput,
   View,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
 const AddItems = ({data, setData}) => {
@@ -48,7 +50,6 @@ const AddItems = ({data, setData}) => {
     setIsEdit(false);
   };
   
-
   const handleUpdateItem = () => {
     if (!itemName.trim()) {
       alert("Item name is required.");
@@ -82,47 +83,54 @@ const AddItems = ({data, setData}) => {
     setIsEdit(false);
   };
   
-
   const handleDeleteItem = id => {
     setData(data.filter(item => item.id !== id));
   };
+  
   const handleEditItem = item => {
     setIsEdit(true);
     setItemName(item.name);
+    setStockAmt(item.stock.toString());
     setEditItemId(item.id);
   };
+  
   return (
-    <View style={styles.container}>
-      <TextInput
-        placeholder="Enter Item Name to Add"
-        placeholderTextColor="#888"
-        style={styles.txtInput}
-        value={itemName}
-        onChangeText={setItemName}
-      />
-      <TextInput
-        placeholder="Enter Item Quantity"
-        placeholderTextColor="#888"
-        style={styles.txtInput}
-        value={stockAmt}
-        onChangeText={setStockAmt}
-      />
-      <Pressable
-        style={({pressed}) => [styles.addBtn, pressed && styles.pressed]}
-        onPress={() => (isEdit ? handleUpdateItem() : handleAddItem())}>
-        <Text style={styles.addBtnText}>
-          {isEdit ? 'Edit Item in Stock' : 'Add Item in Stock'}
-        </Text>
-      </Pressable>
+    <KeyboardAvoidingView 
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View style={styles.inputSection}>
+        <TextInput
+          placeholder="Enter Item Name to Add"
+          placeholderTextColor="#888"
+          style={styles.txtInput}
+          value={itemName}
+          onChangeText={setItemName}
+        />
+        <TextInput
+          placeholder="Enter Item Quantity"
+          placeholderTextColor="#888"
+          style={styles.txtInput}
+          value={stockAmt}
+          onChangeText={setStockAmt}
+          keyboardType="numeric"
+        />
+        <Pressable
+          style={({pressed}) => [styles.addBtn, pressed && styles.pressed]}
+          onPress={() => (isEdit ? handleUpdateItem() : handleAddItem())}>
+          <Text style={styles.addBtnText}>
+            {isEdit ? 'Edit Item in Stock' : 'Add Item in Stock'}
+          </Text>
+        </Pressable>
+      </View>
 
-      <View style={{marginTop: 10}}>
+      <View style={styles.listSection}>
         <View style={styles.headingConatiner}>
           <Text style={styles.headingText}>All Items in the Stock</Text>
         </View>
 
         <FlatList
           data={data}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           renderItem={({item}) => (
             <View
               style={[
@@ -142,10 +150,10 @@ const AddItems = ({data, setData}) => {
               </View>
             </View>
           )}
-          contentContainerStyle={{gap: 5}}
+          contentContainerStyle={{gap: 6, paddingBottom: 60}}
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -153,8 +161,15 @@ export default AddItems;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    width: '100%',
+  },
+  inputSection: {
     paddingVertical: '4%',
-    gap: '2%',
+    gap: 10,
+  },
+  listSection: {
+    flex: 1,
   },
   txtInput: {
     borderWidth: 0.6,
@@ -168,7 +183,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 8,
     width: '100%',
-    alignItems: 'center',
   },
   pressed: {
     backgroundColor: '#03A791',

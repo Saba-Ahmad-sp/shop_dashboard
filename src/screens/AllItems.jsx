@@ -2,7 +2,7 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 
 const AllItems = ({data}) => {
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.headingConatiner}>
         <Text style={styles.headingText}>Items</Text>
         <Text style={styles.headingText}>Quantity</Text>
@@ -10,14 +10,14 @@ const AllItems = ({data}) => {
 
       <FlatList
         data={data}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
           <View style={[styles.itemContainer, {backgroundColor: item.stock < 20 ? "#FFCCCC" : "#D7F6BFFF"}]}>
             <Text style={styles.itemText}>{item.name}</Text>
             <Text style={styles.itemText}>{item.stock}</Text>
           </View>
         )}
-        contentContainerStyle={{gap:5}}
+        contentContainerStyle={{gap: 6, paddingBottom: 60}}
       />
     </View>
   );
@@ -26,11 +26,15 @@ const AllItems = ({data}) => {
 export default AllItems;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+  },
   headingConatiner: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 12,
-    paddingVertical:10
+    paddingVertical: 10
   },
   headingText: {
     fontWeight: '500',
@@ -40,8 +44,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 12,
-    paddingVertical:10,
-    borderRadius:7
+    paddingVertical: 10,
+    borderRadius: 7
   },
   itemText:{
     fontWeight: '400',

@@ -1,4 +1,4 @@
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View, SafeAreaView} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AllItems from './AllItems';
 import AddItems from './AddItems';
@@ -46,7 +46,7 @@ const HomeScreen = () => {
   }, [data]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
       <View style={styles.buttonContainer}>
         <Pressable
@@ -80,10 +80,12 @@ const HomeScreen = () => {
           </Text>
         </Pressable>
       </View>
-      {view === 0 && <AllItems data={data} />}
-      {view === 1 && <AllItems data={data.filter(item => item.stock < 20)} />}
-      {view === 2 && <AddItems data={data} setData={setData} />}
-    </View>
+      <View style={styles.contentContainer}>
+        {view === 0 && <AllItems data={data} />}
+        {view === 1 && <AllItems data={data.filter(item => item.stock < 20)} />}
+        {view === 2 && <AddItems data={data} setData={setData} />}
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -95,6 +97,9 @@ const styles = StyleSheet.create({
     height: '100%',
     padding: '4%',
     backgroundColor: '#ffffff',
+  },
+  contentContainer: {
+    flex: 1,
   },
   title: {
     fontSize: 24,
